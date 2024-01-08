@@ -1,0 +1,29 @@
+import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+
+import 'package:contacts_manager/config/routes/routes_location.dart';
+
+class HorizontalButtonBar extends StatelessWidget {
+  const HorizontalButtonBar({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children:[
+          FloatingActionButton(
+            heroTag: 'contacts',
+            onPressed: () {
+              
+              context.push(RouteLocation.createContact);
+              // Navigator.of(context).pushReplacementNamed('/addContactPage');
+            },
+            child: const Icon(Icons.person_add),
+          ),
+        ]
+      ),
+    );
+  }
+}
