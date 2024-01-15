@@ -13,6 +13,7 @@ class ContactRepositoryImpl implements ContactRepository {
     }
   }
 
+  @override
   Future<void> deleteContact(Contact contact) async {
     try {
       await _datasource.deleteContact(contact);

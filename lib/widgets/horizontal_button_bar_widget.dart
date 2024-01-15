@@ -3,8 +3,8 @@ import 'package:go_router/go_router.dart';
 
 import 'package:contacts_manager/config/routes/routes_location.dart';
 
-class HorizontalButtonBar extends StatelessWidget {
-  const HorizontalButtonBar({super.key});
+class HorizontalButtonBarWidget extends StatelessWidget {
+  const HorizontalButtonBarWidget({super.key});
 
   @override
   Widget build(BuildContext context) {

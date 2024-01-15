@@ -6,9 +6,3 @@ final databaseProvider = Provider<ContactDatabase>(
     return ContactDatabase();
   },
 );
-
-// final allContactsProvider = FutureProvider<List<Contact>>(
-//   (ref) {
-//     return ref.read(databaseProvider).getAllContacts();
-//   },
-// );

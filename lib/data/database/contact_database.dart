@@ -47,9 +47,7 @@ class ContactDatabase {
     );
   }
 
-
   Future<List<Contact>> getAllContacts() async {
-    
     final db = await dbInit;
     final List<Map<String, dynamic>> data = await db.query(
       DbKeys.dbContactTable,
@@ -66,7 +64,8 @@ class ContactDatabase {
     if (keyboard.isNotEmpty) {
       final List<Map<String, dynamic>> data = await db.query(
         DbKeys.dbContactTable,
-        where: "(contactLastName LIKE '%$keyboard%') OR (contactFirstName LIKE '%$keyboard%')",
+        where:
+            "(contactLastName LIKE '%$keyboard%') OR (contactFirstName LIKE '%$keyboard%')",
       );
       // print('data sql :::: $data');
       return List.generate(
@@ -79,11 +78,45 @@ class ContactDatabase {
     }
   }
 
+  // Future<List<Contact>> searchContactByEmail(String? email) async {
+  //   final db = await dbInit;
+  //   if (email != null && email.isNotEmpty) {
+  //     final List<Map<String, dynamic>> data = await db.query(
+  //       DbKeys.dbContactTable,
+  //       where: "(email LIKE '%$email%')",
+  //     );
+  //     return List.generate(
+  //       data.length,
+  //       (index) => Contact.fromJson(data[index]),
+  //     );
+  //   }
+  //   return [];
+  // }
+
+  // Future<List<Contact>> searchContactByPhone(String phoneNumber) async {
+  //   final db = await dbInit;
+  //   if (phoneNumber.isNotEmpty) {
+  //     final List<Map<String, dynamic>> data = await db.query(
+  //       DbKeys.dbContactTable,
+  //       where: "(phoneNumber1 LIKE '%$phoneNumber%') OR (phoneNumber2 LIKE '%$phoneNumber%')",
+  //     );
+  //     return List.generate(
+  //       data.length,
+  //       (index) => Contact.fromJson(data[index]),
+  //     );
+  //   }
+  //   return [];
+  // }
+
   Future<void> deleteDatabase() async {
     final dbPath = await getDatabasesPath();
     final path = join(dbPath, DbKeys.dbName);
     databaseFactory.deleteDatabase(path);
   }
 
- 
+  // Future<bool> databaseExists() async {
+  //   final dbPath = await getDatabasesPath();
+  //   final path = join(dbPath, DbKeys.dbName);
+  //   return databaseFactory.databaseExists(path);
+  // }
 }

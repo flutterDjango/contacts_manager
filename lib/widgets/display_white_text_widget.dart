@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:contacts_manager/utils/utils.dart';
 
-class DisplayWhiteText extends StatelessWidget {
-  const DisplayWhiteText(
+class DisplayWhiteTextWidget extends StatelessWidget {
+  const DisplayWhiteTextWidget(
       {super.key, required this.text, this.fontSize, this.fontWeight});
 
   final String text;

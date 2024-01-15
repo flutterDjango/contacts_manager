@@ -1,21 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'package:contacts_manager/utils/extensions.dart';
+import 'package:contacts_manager/providers/providers.dart';
+import 'package:contacts_manager/utils/utils.dart';
 import 'package:contacts_manager/widgets/widgets.dart';
-import 'package:contacts_manager/data/models/models.dart';
 
-class DisplayContactsList extends ConsumerWidget {
-  const DisplayContactsList(
+
+class DisplayContactsListWidget extends ConsumerWidget {
+  const DisplayContactsListWidget(
       {super.key,
-      required this.contacts,
+      // required this.contacts,
       this.message = 'Pas encore de contact'});
 
-  final List<Contact> contacts;
+  // final List<Contact> contacts;
   final String message;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final contacts = ref.watch(contactProvider).contacts;
     return Container(
       child: contacts.isEmpty
           ? Center(
@@ -27,8 +29,11 @@ class DisplayContactsList extends ConsumerWidget {
                 shrinkWrap: true,
                 itemCount: contacts.length,
                 itemBuilder: (BuildContext context, int index) {
-                  return Dismissible(
-                    key: Key('${contacts[index].contactId}'),
+                  final contact = contacts[index];
+                  return InkWell(
+                    onLongPress: () {
+                      AppAlerts.showDeleteContactAlertDialog(context, ref, contact);
+                    },
                     child: Padding(
                       padding: const EdgeInsets.all(6.0),
                       child: Container(
@@ -44,9 +49,9 @@ class DisplayContactsList extends ConsumerWidget {
                             children: [
                               Padding(
                                 padding: const EdgeInsets.only(left: 15.0),
-                                child: DisplayWhiteText(
+                                child: DisplayWhiteTextWidget(
                                   text:
-                                      ' ${contacts[index].contactLastName}  ${contacts[index].contactFirstName}',
+                                      '${contact.contactLastName}  ${contact.contactFirstName}',
                                   fontWeight: FontWeight.bold,
                                   fontSize: 20,
                                 ),
@@ -55,8 +60,8 @@ class DisplayContactsList extends ConsumerWidget {
                                 padding: const EdgeInsets.all(8.0),
                                 child: ElevatedButton(
                                   onPressed: () {},
-                                  child: const Icon(Icons.edit,
-                                      color: Colors.orange),
+                                  child: Icon(Icons.edit,
+                                      color: context.colorScheme.inversePrimary),
                                 ),
                               ),
                             ],

@@ -28,7 +28,7 @@ class ContactNotifier extends StateNotifier<ContactState> {
     }
   }
 
-  void getAllContacts() async {
+  Future<void> getAllContacts() async {
     try {
       final contacts = await _repository.getAllContacts();
       state = state.copyWith(contacts: contacts);
@@ -36,4 +36,25 @@ class ContactNotifier extends StateNotifier<ContactState> {
       debugPrint(e.toString());
     }
   }
+
+
+  // Future<void> deleteDatabase() async {
+  //   try {
+  //     await _repository.deleteDatabase();
+  //     // getAllContacts();
+  //   } catch (e) {
+  //     debugPrint(e.toString());
+  //   }
+  // }
+
+  
+  // Future<void> databaseExists() async {
+  //   try {
+  //     await _repository.databaseExists();
+  //     getAllContacts();
+  //   } catch (e) {
+  //     debugPrint(e.toString());
+  //   }
+  // }
+
 }

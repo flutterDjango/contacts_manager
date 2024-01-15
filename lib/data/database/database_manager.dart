@@ -34,8 +34,11 @@ class DatabaseManager {
       contactId INTEGER PRIMARY KEY AUTOINCREMENT,
       contactLastName TEXT,
       contactFirstName TEXT,
-      categoryId INT NOT NULL,
-      FOREIGN KEY (categoryId) REFERENCES category (categoryId) 
+      contactPhoneNumber1 TEXT,
+      contactPhoneNumber2 TEXT,
+      contactEmail TEXT,
+      contactCategoryId INT NOT NULL,
+      FOREIGN KEY (contactCategoryId) REFERENCES category (categoryId) 
       )
     ''');
 
@@ -45,11 +48,5 @@ class DatabaseManager {
             categoryName TEXT
           )
           ''');
-  }
-
-  Future<void> deleteDatabase() async {
-    final dbPath = await getDatabasesPath();
-    final path = join(dbPath, DbKeys.dbName);
-    databaseFactory.deleteDatabase(path);
   }
 }
