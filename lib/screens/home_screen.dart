@@ -10,7 +10,7 @@ class HomeScreen extends StatelessWidget {
   ) =>
       const HomeScreen();
   const HomeScreen({super.key});
-
+  
   @override
   Widget build(BuildContext context) {
     // final contactState = ref.watch(contactProvider);
@@ -26,7 +26,7 @@ class HomeScreen extends StatelessWidget {
         actions: [
           IconButton(
             onPressed: () {
-              ContactDatabase().deleteDatabase();
+            ContactDatabase().deleteDatabase();
             },
             icon: Icon(
               Icons.settings,
@@ -40,7 +40,9 @@ class HomeScreen extends StatelessWidget {
       ),
       body: const Column(
         children: [
+          
           HorizontalButtonBarWidget(),
+          
           DisplayContactsListWidget(),
 
           // DisplayContactsListWidget(contacts: contactState.contacts)
@@ -49,3 +51,5 @@ class HomeScreen extends StatelessWidget {
     );
   }
 }
+
+

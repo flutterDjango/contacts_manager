@@ -26,16 +26,21 @@ class _TextFormFieldWidgetState extends State<TextFormFieldWidget> {
     };
     return TextFormField(
         controller: widget.controller,
-        maxLength: 30,
+        maxLength: 15,
         decoration: InputDecoration(
           label: Text(widget.labelText),
         ),
         validator: (value) {
-          return ValidFieldForm.validStringField(value, 30);
+          return ValidFieldForm.validStringField(value, 15);
         },
         onSaved: (value) {
           final String nameKey = contactNameKey[widget.labelText]!;
-          widget.contactItem[nameKey] = value;
+          if (value != null && value.isNotEmpty) {
+            widget.contactItem[nameKey] =
+                value[0].toUpperCase() + value.substring(1).toLowerCase();
+          } else {
+            widget.contactItem[nameKey] = null;
+          }
         });
   }
 }

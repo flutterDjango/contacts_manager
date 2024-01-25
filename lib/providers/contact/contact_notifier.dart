@@ -19,6 +19,16 @@ class ContactNotifier extends StateNotifier<ContactState> {
   }
 
 
+  Future<void> updateContact(Contact contact) async {
+    try {
+      await _repository.updateContact(contact);
+      getAllContacts();
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+  }
+
+
   Future<void> deleteContact(Contact contact) async {
     try {
       await _repository.deleteContact(contact);

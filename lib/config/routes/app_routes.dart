@@ -14,5 +14,6 @@ final appRoutes = [
     path: RouteLocation.createContact,
     parentNavigatorKey: navigationKey,
     builder: CreateContactScreen.builder,
+  
   )
 ];

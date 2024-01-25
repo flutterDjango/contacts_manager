@@ -62,7 +62,12 @@ class _EmailFormFieldWidgetState extends State<EmailFormFieldWidget> {
         }
       },
       onSaved: (email) {
-        widget.contactItem['contactEmail'] = email;
+        if (email != null) {
+          (email.isEmpty)
+              ? widget.contactItem['contactEmail'] = null
+              : widget.contactItem['contactEmail'] = email;
+        }
+      
       },
     );
   }

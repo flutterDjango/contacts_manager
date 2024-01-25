@@ -1,3 +1,4 @@
+import 'package:contacts_manager/config/routes/routes_location.dart';
 import 'package:contacts_manager/widgets/text_form_field_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -11,8 +12,9 @@ import 'package:contacts_manager/utils/utils.dart';
 import 'package:contacts_manager/widgets/widgets.dart';
 
 class ContactFormWidget extends ConsumerStatefulWidget {
-  const ContactFormWidget({super.key});
+  const ContactFormWidget({super.key, this.contact});
 
+  final Contact? contact;
   @override
   ConsumerState<ContactFormWidget> createState() => _ContactFormState();
 }
@@ -28,14 +30,15 @@ class _ContactFormState extends ConsumerState<ContactFormWidget> {
   String? messagePhone1AlreadyExist;
   String? messagePhone2AlreadyExist;
 
-  String phoneCountryCode = "+33";
+  Map<String, String> phoneCountryCode = {};
   bool phoneFieldOnFocus = false;
   bool emailFieldOnFocus = false;
 
   Map<String, dynamic> contactItem = {'contactCategoryId': 1};
-  void getCountryCode(String countryCode) {
+
+  void getCountryCode(String countryCode, String countryCodeKey) {
     setState(() {
-      phoneCountryCode = countryCode;
+      phoneCountryCode[countryCodeKey] = countryCode;
     });
   }
 
@@ -66,6 +69,27 @@ class _ContactFormState extends ConsumerState<ContactFormWidget> {
     _phoneNumber2Controller.dispose();
     _emailController.dispose();
     super.dispose();
+  }
+
+  @override
+  void initState() {
+    if (widget.contact != null) {
+      contactItem["contactId"] = widget.contact!.contactId;
+      _lastNameController.text = widget.contact!.contactLastName ?? '';
+      _firstNameController.text = widget.contact!.contactFirstName ?? '';
+      contactItem["countryCode1"] = widget.contact!.countryCode1;
+      contactItem["countryCode2"] = widget.contact!.countryCode2;
+
+      phoneCountryCode["countryCode1"] =
+          widget.contact!.countryCode1.split('-').last;
+      phoneCountryCode["countryCode2"] =
+          widget.contact!.countryCode1.split('-').last;
+
+      _phoneNumber1Controller.text = widget.contact!.contactPhoneNumber1 ?? '';
+      _phoneNumber2Controller.text = widget.contact!.contactPhoneNumber2 ?? '';
+      _emailController.text = widget.contact!.contactEmail ?? '';
+    }
+    super.initState();
   }
 
   bool isPhoneValidated = false;
@@ -108,7 +132,7 @@ class _ContactFormState extends ConsumerState<ContactFormWidget> {
                     'messagePhoneAlreadyExist': messagePhone1AlreadyExist,
                   },
                   phoneCountryCode: (countryCode) =>
-                      getCountryCode(countryCode),
+                      getCountryCode(countryCode, "countryCode1"),
                   phoneFieldOnFocus: (onFocus) =>
                       getPhoneFieldOnFocusStatus(onFocus),
                 ),
@@ -123,7 +147,7 @@ class _ContactFormState extends ConsumerState<ContactFormWidget> {
                     'messagePhoneAlreadyExist': messagePhone2AlreadyExist,
                   },
                   phoneCountryCode: (countryCode) =>
-                      getCountryCode(countryCode),
+                      getCountryCode(countryCode, "countryCode2"),
                   phoneFieldOnFocus: (onFocus) =>
                       getPhoneFieldOnFocusStatus(onFocus),
                 ),
@@ -151,7 +175,7 @@ class _ContactFormState extends ConsumerState<ContactFormWidget> {
                           text: 'Annuler', fontSize: 20),
                     ),
                     ElevatedButton(
-                      onPressed: () {
+                      onPressed: () async {
                         final form = _formKey.currentState!;
                         SystemChannels.textInput.invokeMethod('TextInput.hide');
                         if (phoneFieldOnFocus) {
@@ -161,29 +185,65 @@ class _ContactFormState extends ConsumerState<ContactFormWidget> {
                           emailFieldOnFocus = false;
                         }
                         if (form.validate()) {
-                          _checkIfTheContactCanBeReachead();
+                          final controllers = {
+                            'phoneNumber1Controller': _phoneNumber1Controller,
+                            'phoneNumber2Controller': _phoneNumber2Controller,
+                            'lastNameController': _lastNameController,
+                            'firstNameController': _firstNameController,
+                            'emailController': _emailController,
+                          };
 
                           final List<Contact> allContacts =
                               ref.watch(contactProvider).contacts;
-                          _checkIfEmailAlreadyExist(allContacts);
-                          _checkIfPhoneAlreadyExist(allContacts);
-                        }
 
-                        if ([
-                          messagePhone1AlreadyExist,
-                          messagePhone2AlreadyExist,
-                          messageEmailAlreadyExist
-                        ].every((x) => x == null)) {
-                          print('----------- save');
-                          _saveContact();
-                        } else {
-                          print('----------- no save');
-                        }
+                          final phoneAlreadyExist =
+                              ValidFieldForm.checkIfPhoneAlreadyExist(
+                            allContacts,
+                            widget.contact,
+                            controllers,
+                            phoneCountryCode,
+                            phoneFieldOnFocus,
+                          );
+                          final emailAlreadyExist =
+                              ValidFieldForm.checkIfEmailAlreadyExist(
+                            allContacts,
+                            widget.contact,
+                            _emailController,
+                            emailFieldOnFocus,
+                          );
 
-                        // _saveContact();
+                          setState(() {
+                            messagePhone1AlreadyExist =
+                                phoneAlreadyExist['phoneExist1'];
+                            messagePhone2AlreadyExist =
+                                phoneAlreadyExist['phoneExist2'];
+                            messageEmailAlreadyExist = emailAlreadyExist;
+                          });
+
+                          if ([
+                            messagePhone1AlreadyExist,
+                            messagePhone2AlreadyExist,
+                            messageEmailAlreadyExist
+                          ].every((x) => x == null)) {
+                            bool contactCanBeReachead = await ValidFieldForm
+                                .checkIfTheContactCanBeReachead(
+                                    controllers, context);
+                            if (!mounted) return;
+                            bool identicalPhone = await ValidFieldForm
+                                .checkIfPhoneNumbersAreTheSame(
+                                    controllers, phoneCountryCode, context);
+                            if (contactCanBeReachead && !identicalPhone) {
+                              (widget.contact == null)
+                                  ? _saveContact()
+                                  : _updateContact();
+                            }
+                          }
+                        }
                       },
-                      child: const DisplayWhiteTextWidget(
-                          text: 'Ajouter', fontSize: 20),
+                      child: DisplayWhiteTextWidget(
+                          text:
+                              (widget.contact == null) ? 'Ajouter' : 'Modifier',
+                          fontSize: 20),
                     ),
                   ],
                 ),
@@ -195,99 +255,52 @@ class _ContactFormState extends ConsumerState<ContactFormWidget> {
     );
   }
 
-  void _checkIfTheContactCanBeReachead() async {
-    bool anonymousContact = ValidFieldForm.lastNameAndFirstNameEmpty(
-      lastName: _lastNameController.text.trim(),
-      firstName: _firstNameController.text.trim(),
-    );
-    bool noWayToContact = ValidFieldForm.phonesAndEmailEmpty(
-      phoneNumber1: _phoneNumber1Controller.text.trim(),
-      phoneNumber2: _phoneNumber2Controller.text.trim(),
-      email: _emailController.text.trim(),
-    );
-
-    if (anonymousContact) {
-      await AppAlerts.showInformantionContactAlertDialog(
-          context: context, message: 'Entrer un nom ou un prénom.');
-    }
-    if (!mounted) return;
-    if (noWayToContact) {
-      await AppAlerts.showInformantionContactAlertDialog(
-          context: context,
-          message: "Entrer au moins un numéro de téléphone ou l'email.");
-    }
-  }
-
-  void _checkIfEmailAlreadyExist(List<Contact> allContacts) {
-    final bool emailExist = ValidFieldForm.isEmailAlreadyExist(
-      controller: _emailController,
-      contacts: allContacts,
-    );
-
-    if (emailExist) {
-      if (!emailFieldOnFocus) {
-        setState(() {
-          messageEmailAlreadyExist = "Cet email existe déjà.";
-        });
-      }
-    } else {
-      setState(() {
-        messageEmailAlreadyExist = null;
-      });
-    }
-  }
-
-  void _checkIfPhoneAlreadyExist(List<Contact> allContacts) {
-    const String messagePhoneNumber = "Ce numéro existe déjà";
-    final bool phone1Exist = ValidFieldForm.isPhoneAlreadyExist(
-      controller: _phoneNumber1Controller,
-      phoneCountryCode: phoneCountryCode,
-      contacts: allContacts,
-    );
-    final bool phone2Exist = ValidFieldForm.isPhoneAlreadyExist(
-      controller: _phoneNumber2Controller,
-      phoneCountryCode: phoneCountryCode,
-      contacts: allContacts,
-    );
-    if (phone1Exist) {
-      if (!phoneFieldOnFocus) {
-        setState(() {
-          messagePhone1AlreadyExist = messagePhoneNumber;
-        });
-      }
-    } else if (phone2Exist) {
-      if (!phoneFieldOnFocus) {
-        setState(() {
-          messagePhone2AlreadyExist = messagePhoneNumber;
-        });
-      }
-    } else {
-      setState(() {
-        messagePhone1AlreadyExist = null;
-        messagePhone2AlreadyExist = null;
-      });
-    }
-  }
-
-  void _saveContact() {
+  void _saveContact() async {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
 
       final contact = Contact(
-        contactId: 1,
         contactLastName: contactItem['contactLastName'],
         contactFirstName: contactItem['contactFirstName'],
         contactPhoneNumber1: contactItem['contactPhoneNumber1'],
+        countryCode1: contactItem['countryCode1'],
+        completePhoneNumber1: contactItem['completePhoneNumber1'],
         contactPhoneNumber2: contactItem['contactPhoneNumber2'],
+        countryCode2: contactItem['countryCode2'],
+        completePhoneNumber2: contactItem['completePhoneNumber2'],
         contactEmail: contactItem['contactEmail'],
         contactCategoryId: contactItem['contactCategoryId'],
       );
-      print('contact $contact');
 
-      // await ref
-      //     .read(contactProvider.notifier)
-      //     .createContact(contact)
-      //     .then((value) => context.go(RouteLocation.home));
+      await ref
+          .read(contactProvider.notifier)
+          .createContact(contact)
+          .then((value) => context.go(RouteLocation.home));
+    }
+  }
+
+  void _updateContact() async {
+    if (_formKey.currentState!.validate()) {
+      _formKey.currentState!.save();
+
+      final contact = Contact(
+        contactId: contactItem['contactId'],
+        contactLastName: contactItem['contactLastName'],
+        contactFirstName: contactItem['contactFirstName'],
+        contactPhoneNumber1: contactItem['contactPhoneNumber1'],
+        countryCode1: contactItem['countryCode1'],
+        completePhoneNumber1: contactItem['completePhoneNumber1'],
+        contactPhoneNumber2: contactItem['contactPhoneNumber2'],
+        countryCode2: contactItem['countryCode2'],
+        completePhoneNumber2: contactItem['completePhoneNumber2'],
+        contactEmail: contactItem['contactEmail'],
+        contactCategoryId: contactItem['contactCategoryId'],
+      );
+
+      await ref
+          .read(contactProvider.notifier)
+          .updateContact(contact)
+          .then((value) => context.pop());
     }
   }
 }

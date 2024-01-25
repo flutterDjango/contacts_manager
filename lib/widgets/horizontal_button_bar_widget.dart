@@ -10,20 +10,15 @@ class HorizontalButtonBarWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(8.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children:[
-          FloatingActionButton(
-            heroTag: 'contacts',
-            onPressed: () {
-              
-              context.push(RouteLocation.createContact);
-              // Navigator.of(context).pushReplacementNamed('/addContactPage');
-            },
-            child: const Icon(Icons.person_add),
-          ),
-        ]
-      ),
+      child: Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
+        FloatingActionButton(
+          heroTag: 'contacts',
+          onPressed: () {
+            context.push(RouteLocation.createContact);
+          },
+          child: const Icon(Icons.person_add),
+        ),
+      ]),
     );
   }
 }

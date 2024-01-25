@@ -4,3 +4,5 @@ export 'display_contacts_list_widget.dart';
 export 'contact_form_widget.dart';
 export 'email_form_field_widget.dart';
 export 'phone_form_field_widget.dart';
+export 'contact_details_widget.dart';
+export 'text_form_field_widget.dart';

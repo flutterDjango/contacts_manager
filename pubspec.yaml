@@ -44,7 +44,6 @@ dependencies:
   equatable: ^2.0.5
   intl_phone_field: ^3.2.0
   email_validator: ^2.1.17
-  intl_phone_number_input: ^0.7.4
 
 dev_dependencies:
   flutter_test:

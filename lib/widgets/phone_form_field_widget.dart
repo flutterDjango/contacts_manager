@@ -44,13 +44,26 @@ class _PhoneFormFieldWidgetState extends State<PhoneFormFieldWidget> {
 
   @override
   Widget build(BuildContext context) {
-    const Map<String, String> phoneKeyName = {
-      'Téléphone 1': 'contactPhoneNumber1',
-      'Téléphone 2': 'contactPhoneNumber2'
+    const Map<String, List<String>> phoneKeyName = {
+      'Téléphone 1': [
+        'countryCode1',
+        'contactPhoneNumber1',
+        'completePhoneNumber1'
+      ],
+      'Téléphone 2': [
+        'countryCode2',
+        'contactPhoneNumber2',
+        'completePhoneNumber2'
+      ]
     };
+
     final String? labelText = widget.infoMessages['labelText'];
     final String? messagePhoneAlreadyExist =
         widget.infoMessages['messagePhoneAlreadyExist'];
+
+    final String completeNumberKey = phoneKeyName[labelText]![2];
+    final String phoneNumberKey = phoneKeyName[labelText]![1];
+    final String countryCodeKey = phoneKeyName[labelText]![0];
 
     return IntlPhoneField(
       keyboardType: TextInputType.phone,
@@ -62,7 +75,7 @@ class _PhoneFormFieldWidgetState extends State<PhoneFormFieldWidget> {
           borderSide: BorderSide(),
         ),
       ),
-      initialCountryCode: 'FR',
+      initialCountryCode: _countryIsoCode(widget.contactItem, countryCodeKey),
       focusNode: _focusNode,
       invalidNumberMessage: 'Numéro invalide',
       controller: widget.controller,
@@ -77,17 +90,26 @@ class _PhoneFormFieldWidgetState extends State<PhoneFormFieldWidget> {
         return null;
       },
       onSaved: (phone) {
-        final String phoneKey = phoneKeyName[labelText]!;
         if (phone != null) {
-          print('phoneKey $phoneKey');
-          print('phoneKey ${phone.number}');
-          print('phoneKey ${phone.number.isEmpty}');
-
-          (phone.number.isEmpty)
-              ? widget.contactItem[phoneKey] = '125'
-              : widget.contactItem[phoneKey] = phone.completeNumber;
+          widget.contactItem[countryCodeKey] =
+              '${phone.countryISOCode}-${phone.countryCode}';
+          if (phone.number.isEmpty) {
+            widget.contactItem[phoneNumberKey] = null;
+            widget.contactItem[completeNumberKey] = null;
+          } else {
+            widget.contactItem[phoneNumberKey] = phone.number;
+            widget.contactItem[completeNumberKey] = phone.completeNumber;
+          }
         }
       },
     );
+  }
+
+  String _countryIsoCode(contactItem, countryCodeKey) {
+    final String? countryCode = contactItem[countryCodeKey];
+    if (countryCode != null && countryCode.isNotEmpty) {
+      return countryCode.split('-').first;
+    }
+    return 'FR';
   }
 }

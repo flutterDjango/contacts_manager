@@ -67,13 +67,13 @@ class ContactDatabase {
         where:
             "(contactLastName LIKE '%$keyboard%') OR (contactFirstName LIKE '%$keyboard%')",
       );
-      // print('data sql :::: $data');
+      
       return List.generate(
         data.length,
         (index) => Contact.fromJson(data[index]),
       );
     } else {
-      print('liste vide');
+  
       return [];
     }
   }
@@ -114,9 +114,17 @@ class ContactDatabase {
     databaseFactory.deleteDatabase(path);
   }
 
-  // Future<bool> databaseExists() async {
-  //   final dbPath = await getDatabasesPath();
-  //   final path = join(dbPath, DbKeys.dbName);
-  //   return databaseFactory.databaseExists(path);
-  // }
+  Future<bool> databaseExists() async {
+    final dbPath = await getDatabasesPath();
+    final path = join(dbPath, DbKeys.dbName);
+    return databaseFactory.databaseExists(path);
+  }
+
+
+  Future<int?> tableIsEmpty() async {
+    final db = await dbInit;
+     return  Sqflite.firstIntValue(await db.rawQuery('SELECT COUNT(*) FROM ${DbKeys.dbContactTable}'));
+     
+    // return databaseFactory.databaseExists(path);
+  }
 }

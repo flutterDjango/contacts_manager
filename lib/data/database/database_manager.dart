@@ -35,7 +35,11 @@ class DatabaseManager {
       contactLastName TEXT,
       contactFirstName TEXT,
       contactPhoneNumber1 TEXT,
+      countryCode1 TEXT,
+      completePhoneNumber1 TEXT,
       contactPhoneNumber2 TEXT,
+      countryCode2 TEXT,
+      completePhoneNumber2 TEXT,
       contactEmail TEXT,
       contactCategoryId INT NOT NULL,
       FOREIGN KEY (contactCategoryId) REFERENCES category (categoryId) 
@@ -49,4 +53,12 @@ class DatabaseManager {
           )
           ''');
   }
+
+  // Future<int?> tableIsEmpty() async {
+  //   final db = await _initDb();
+  //   return Sqflite.firstIntValue(
+  //       await db.rawQuery('SELECT COUNT(*) FROM ${DbKeys.dbContactTable}'));
+
+  //   // return databaseFactory.databaseExists(path);
+  // }
 }
