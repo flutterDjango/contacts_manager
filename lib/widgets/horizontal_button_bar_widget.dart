@@ -18,6 +18,13 @@ class HorizontalButtonBarWidget extends StatelessWidget {
           },
           child: const Icon(Icons.person_add),
         ),
+        FloatingActionButton(
+            heroTag: 'categories',
+            onPressed: () {
+               context.push(RouteLocation.category);
+            },
+            child: const Icon(Icons.playlist_add_rounded),
+          ),
       ]),
     );
   }

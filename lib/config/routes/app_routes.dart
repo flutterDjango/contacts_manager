@@ -14,6 +14,10 @@ final appRoutes = [
     path: RouteLocation.createContact,
     parentNavigatorKey: navigationKey,
     builder: CreateContactScreen.builder,
-  
+  ),
+  GoRoute(
+    path: RouteLocation.category,
+    parentNavigatorKey: navigationKey,
+    builder: CategoryScreen.builder,
   )
 ];

@@ -30,4 +30,17 @@ class Category extends Equatable {
       categoryName: map['categoryName'],
     );
   }
+
+
+  Category copyWith({
+    int? categoryId,
+    String? categoryName,
+    
+  }) {
+    return Category(
+      categoryId: categoryId ?? this.categoryId,
+      categoryName: categoryName ?? this.categoryName,
+     
+    );
+  }
 }

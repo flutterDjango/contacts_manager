@@ -7,7 +7,7 @@ import 'package:contacts_manager/data/data.dart';
 class ContactDatabase {
   final dbInit = DatabaseManager().databaseInit;
 
-  Future<int> addContact(Contact contact) async {
+  Future<int> createContact(Contact contact) async {
     final db = await dbInit;
     return db.transaction(
       (txn) async {
@@ -67,16 +67,58 @@ class ContactDatabase {
         where:
             "(contactLastName LIKE '%$keyboard%') OR (contactFirstName LIKE '%$keyboard%')",
       );
-      
+
       return List.generate(
         data.length,
         (index) => Contact.fromJson(data[index]),
       );
     } else {
-  
       return [];
     }
   }
+
+  Future<List<Category>> getAllCategories() async {
+    final db = await dbInit;
+    final List<Map<String, dynamic>> data = await db.query(
+      DbKeys.dbCategoryTable,
+      orderBy: "CATEGORYID DESC",
+    );
+    return List.generate(
+      data.length,
+      (index) => Category.fromJson(data[index]),
+    );
+  }
+
+  // Future<List<Category>> getCategoryById(int categoryId) async {
+  //   final db = await dbInit;
+  //   final List<Map<String, dynamic>> data = await db.rawQuery(
+  //       'SELECT * FROM ${DbKeys.dbCategoryTable} WHERE categoryId =?',
+  //       [categoryId]);
+  //   return List.generate(
+  //     data.length,
+  //     (index) => Category.fromJson(data[index]),
+  //   );
+  // }
+
+  Future<int> createCategory(Category category) async {
+    final db = await dbInit;
+    return db.transaction(
+      (txn) async {
+        return await txn.insert(
+          DbKeys.dbCategoryTable,
+          category.toJson(),
+          conflictAlgorithm: ConflictAlgorithm.replace,
+        );
+      },
+    );
+  }
+  // Future<Category> getCategoryById(int categoryId) async {
+  //   final db = await dbInit;
+  //   final List data = await db.rawQuery(
+  //       'SELECT * FROM ${DbKeys.dbCategoryTable} WHERE categoryId =?',
+  //       [categoryId]);
+  //   return data.first;
+  // }
 
   // Future<List<Contact>> searchContactByEmail(String? email) async {
   //   final db = await dbInit;
@@ -120,11 +162,11 @@ class ContactDatabase {
     return databaseFactory.databaseExists(path);
   }
 
-
   Future<int?> tableIsEmpty() async {
     final db = await dbInit;
-     return  Sqflite.firstIntValue(await db.rawQuery('SELECT COUNT(*) FROM ${DbKeys.dbContactTable}'));
-     
+    return Sqflite.firstIntValue(
+        await db.rawQuery('SELECT COUNT(*) FROM ${DbKeys.dbContactTable}'));
+
     // return databaseFactory.databaseExists(path);
   }
 }

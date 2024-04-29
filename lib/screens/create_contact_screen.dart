@@ -5,11 +5,21 @@ import 'package:go_router/go_router.dart';
 import 'package:contacts_manager/widgets/widgets.dart';
 
 class CreateContactScreen extends StatelessWidget {
+  // static CreateContactScreen builder(
+  //   BuildContext context,
+  //   GoRouterState state,
+    
+  // ) => CreateContactScreen(contact: state.extra as Contact);
+
   static CreateContactScreen builder(
     BuildContext context,
     GoRouterState state,
-  ) => const CreateContactScreen();
-  
+  ) { 
+      final obj = state.extra as Contact?;
+      if (obj != null) return CreateContactScreen(contact: obj);
+      return const CreateContactScreen();
+    }
+
   const CreateContactScreen({super.key, this.contact});
   final Contact? contact; 
   @override

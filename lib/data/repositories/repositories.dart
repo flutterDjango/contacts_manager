@@ -1,2 +1,2 @@
-export 'contact_repository.dart';
-export 'contact_repository_impl.dart';
+export 'contacts/contacts.dart';
+export 'categories/categories.dart';

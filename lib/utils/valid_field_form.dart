@@ -23,6 +23,8 @@ class ValidFieldForm {
     return null;
   }
 
+
+  
   static bool lastNameAndFirstNameEmpty({String? lastName, String? firstName}) {
     if ((lastName == null || lastName.isEmpty) &&
         (firstName == null || firstName.isEmpty)) {
@@ -199,7 +201,8 @@ class ValidFieldForm {
     final String phoneNumber1 = controllers['phoneNumber1Controller']!.text;
     final String phoneNumber2 = controllers['phoneNumber2Controller']!.text;
     final String phoneCountryCode1 = phoneCountryCode["countryCode1"]!;
-    final String phoneCountryCode2 = phoneCountryCode["countryCode2"]!;
+    // final String phoneCountryCode2 = "+38";
+    final String phoneCountryCode2 = phoneCountryCode["countryCode2"] ?? "";
 
 
     if (phoneCountryCode1 + phoneNumber1 == phoneCountryCode2 + phoneNumber2) {

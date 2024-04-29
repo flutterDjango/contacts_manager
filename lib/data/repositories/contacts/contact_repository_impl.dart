@@ -7,7 +7,7 @@ class ContactRepositoryImpl implements ContactRepository {
   @override
   Future<void> createContact(Contact contact) async {
     try {
-      await _datasource.addContact(contact);
+      await _datasource.createContact(contact);
     } catch (e) {
       throw '$e';
     }

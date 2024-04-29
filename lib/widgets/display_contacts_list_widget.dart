@@ -1,10 +1,12 @@
-import 'package:contacts_manager/screens/create_contact_screen.dart';
+import 'package:contacts_manager/config/routes/routes_location.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import 'package:contacts_manager/screens/create_contact_screen.dart';
 import 'package:contacts_manager/providers/providers.dart';
 import 'package:contacts_manager/utils/utils.dart';
 import 'package:contacts_manager/widgets/widgets.dart';
+import 'package:go_router/go_router.dart';
 
 class DisplayContactsListWidget extends ConsumerWidget {
   const DisplayContactsListWidget({super.key});
@@ -20,6 +22,7 @@ class DisplayContactsListWidget extends ConsumerWidget {
         itemCount: contacts.length,
         itemBuilder: (BuildContext context, int index) {
           final contact = contacts[index];
+
           final String? lastName = contact.contactLastName;
           final String? firstName = contact.contactFirstName;
 
@@ -60,12 +63,7 @@ class DisplayContactsListWidget extends ConsumerWidget {
                         padding: const EdgeInsets.all(8.0),
                         child: ElevatedButton(
                           onPressed: () {
-                            Navigator.of(context).push(MaterialPageRoute(
-                                builder: (_) => CreateContactScreen(
-                                      contact: contact,
-                                    )));
-                            // context.go(RouteLocation.createContact,  extra: contact);
-                            // CreateContactScreen(contact: contact,);
+                            context.push(RouteLocation.createContact ,  extra: contact);
                           },
                           child: Icon(Icons.edit,
                               color: context.colorScheme.inversePrimary),

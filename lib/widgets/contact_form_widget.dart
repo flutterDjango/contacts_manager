@@ -1,13 +1,13 @@
-import 'package:contacts_manager/config/routes/routes_location.dart';
-import 'package:contacts_manager/widgets/text_form_field_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import 'package:contacts_manager/providers/providers.dart';
+import 'package:contacts_manager/config/routes/routes_location.dart';
 import 'package:contacts_manager/data/data.dart';
 import 'package:contacts_manager/data/models/models.dart';
-import 'package:contacts_manager/providers/contact/contact_provider.dart';
+// import 'package:contacts_manager/providers/contact/contact_provider.dart';
 import 'package:contacts_manager/utils/utils.dart';
 import 'package:contacts_manager/widgets/widgets.dart';
 
@@ -30,11 +30,24 @@ class _ContactFormState extends ConsumerState<ContactFormWidget> {
   String? messagePhone1AlreadyExist;
   String? messagePhone2AlreadyExist;
 
+  int? catId;
+
   Map<String, String> phoneCountryCode = {};
   bool phoneFieldOnFocus = false;
   bool emailFieldOnFocus = false;
 
-  Map<String, dynamic> contactItem = {'contactCategoryId': 1};
+  Map<String, dynamic> contactItem = {};
+
+  // Category? _selectedCategory;
+
+  getCategorySelected(selectedCategory) {
+   
+    print('**$selectedCategory');
+    print('***${selectedCategory.categoryId}');
+    contactItem['contactCategoryId'] = selectedCategory.categoryId;
+    print(contactItem);
+
+  }
 
   void getCountryCode(String countryCode, String countryCodeKey) {
     setState(() {
@@ -88,13 +101,29 @@ class _ContactFormState extends ConsumerState<ContactFormWidget> {
       _phoneNumber1Controller.text = widget.contact!.contactPhoneNumber1 ?? '';
       _phoneNumber2Controller.text = widget.contact!.contactPhoneNumber2 ?? '';
       _emailController.text = widget.contact!.contactEmail ?? '';
+      catId = widget.contact!.contactCategoryId;
+      
     }
     super.initState();
   }
 
   bool isPhoneValidated = false;
+
+  String getCategoryName(categories, contact) {
+    String cat = '';
+    for (var category in categories){
+      if (category.categoryId == contact.contactCategoryId){
+        cat = '${category.categoryName}';
+        break;
+  
+      }
+    }
+    // print('contactId ${contact.contactCategoryId}');
+    return cat;
+  }
   @override
   Widget build(BuildContext context) {
+    final List<Category> allCategories = ref.watch(categoryProvider).categories;
     return Center(
       child: Form(
         key: _formKey,
@@ -164,6 +193,17 @@ class _ContactFormState extends ConsumerState<ContactFormWidget> {
               ),
               Padding(
                 padding: const EdgeInsets.all(8.0),
+                child: CategoriesDropdownWidget(
+                  categories: allCategories,
+                  initialCategory: (catId == 0) ? 'Aucune'
+                                              : getCategoryName(allCategories,
+                                                                widget.contact),
+                  selectedCategory: (selectedCategory) =>
+                      getCategorySelected(selectedCategory),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
@@ -184,7 +224,7 @@ class _ContactFormState extends ConsumerState<ContactFormWidget> {
                         if (emailFieldOnFocus) {
                           emailFieldOnFocus = false;
                         }
-                        if (form.validate()) {
+                        if (form.validate())  {
                           final controllers = {
                             'phoneNumber1Controller': _phoneNumber1Controller,
                             'phoneNumber2Controller': _phoneNumber2Controller,
@@ -228,10 +268,11 @@ class _ContactFormState extends ConsumerState<ContactFormWidget> {
                             bool contactCanBeReachead = await ValidFieldForm
                                 .checkIfTheContactCanBeReachead(
                                     controllers, context);
-                            if (!mounted) return;
+                            if (!context.mounted) return;
                             bool identicalPhone = await ValidFieldForm
                                 .checkIfPhoneNumbersAreTheSame(
                                     controllers, phoneCountryCode, context);
+                            
                             if (contactCanBeReachead && !identicalPhone) {
                               (widget.contact == null)
                                   ? _saveContact()
@@ -258,19 +299,21 @@ class _ContactFormState extends ConsumerState<ContactFormWidget> {
   void _saveContact() async {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
-
+     
       final contact = Contact(
-        contactLastName: contactItem['contactLastName'],
-        contactFirstName: contactItem['contactFirstName'],
-        contactPhoneNumber1: contactItem['contactPhoneNumber1'],
-        countryCode1: contactItem['countryCode1'],
-        completePhoneNumber1: contactItem['completePhoneNumber1'],
-        contactPhoneNumber2: contactItem['contactPhoneNumber2'],
-        countryCode2: contactItem['countryCode2'],
-        completePhoneNumber2: contactItem['completePhoneNumber2'],
-        contactEmail: contactItem['contactEmail'],
-        contactCategoryId: contactItem['contactCategoryId'],
+        contactLastName: contactItem['contactLastName'] ?? "",
+        contactFirstName: contactItem['contactFirstName'] ?? "",
+        contactPhoneNumber1: contactItem['contactPhoneNumber1'] ?? "",
+        countryCode1: contactItem['countryCode1'] ?? "",
+        completePhoneNumber1: contactItem['completePhoneNumber1'] ?? "",
+        contactPhoneNumber2: contactItem['contactPhoneNumber2'] ?? "",
+        countryCode2: contactItem['countryCode2'] ?? "",
+        completePhoneNumber2: contactItem['completePhoneNumber2'] ?? "",
+        contactEmail: contactItem['contactEmail'] ?? "",
+        contactCategoryId: contactItem['contactCategoryId'] ?? 0,
       );
+
+      
 
       await ref
           .read(contactProvider.notifier)
@@ -285,16 +328,16 @@ class _ContactFormState extends ConsumerState<ContactFormWidget> {
 
       final contact = Contact(
         contactId: contactItem['contactId'],
-        contactLastName: contactItem['contactLastName'],
-        contactFirstName: contactItem['contactFirstName'],
-        contactPhoneNumber1: contactItem['contactPhoneNumber1'],
-        countryCode1: contactItem['countryCode1'],
-        completePhoneNumber1: contactItem['completePhoneNumber1'],
-        contactPhoneNumber2: contactItem['contactPhoneNumber2'],
-        countryCode2: contactItem['countryCode2'],
-        completePhoneNumber2: contactItem['completePhoneNumber2'],
-        contactEmail: contactItem['contactEmail'],
-        contactCategoryId: contactItem['contactCategoryId'],
+        contactLastName: contactItem['contactLastName'] ?? "",
+        contactFirstName: contactItem['contactFirstName'] ?? "",
+        contactPhoneNumber1: contactItem['contactPhoneNumber1'] ?? "",
+        countryCode1: contactItem['countryCode1'] ?? "",
+        completePhoneNumber1: contactItem['completePhoneNumber1'] ?? "",
+        contactPhoneNumber2: contactItem['contactPhoneNumber2'] ?? "",
+        countryCode2: contactItem['countryCode2'] ?? "",
+        completePhoneNumber2: contactItem['completePhoneNumber2'] ?? "",
+        contactEmail: contactItem['contactEmail'] ?? "",
+        contactCategoryId: contactItem['contactCategoryId'] ?? 0,
       );
 
       await ref

@@ -35,7 +35,7 @@ class AppAlerts {
       onPressed: () async {
         await ref.read(contactProvider.notifier).deleteContact(contact).then(
           (value) {
-            AppAlerts.displaySnackBar(context, "Le contact est effacé");
+            AppAlerts.displaySnackBar(context, "Le contact est effacé.");
             context.pop();
           },
         );
@@ -65,7 +65,7 @@ class AppAlerts {
       onPressed: () => context!.pop(),
       child: const Text('OK'),
     );
-  
+
     AlertDialog alert = AlertDialog(
       title: Text(message!),
       actions: [
@@ -79,5 +79,4 @@ class AppAlerts {
       },
     );
   }
-
 }
