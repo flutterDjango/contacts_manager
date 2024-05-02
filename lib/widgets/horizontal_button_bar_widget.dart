@@ -25,6 +25,7 @@ class HorizontalButtonBarWidget extends StatelessWidget {
             },
             child: const Icon(Icons.playlist_add_rounded),
           ),
+          
       ]),
     );
   }

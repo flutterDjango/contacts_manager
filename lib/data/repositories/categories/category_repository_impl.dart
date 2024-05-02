@@ -13,6 +13,14 @@ class CategoryRepositoryImpl implements CategoryRepository {
     }
   }
 
+  @override
+  Future<void> deleteCategory(Category category) async {
+    try {
+      await _datasource.deleteCategory(category);
+    } catch (e) {
+      throw '$e';
+    }
+  }
   // @override
   // Future<Category> getCategoryById(int categoryId) async {
   //   try {

@@ -6,11 +6,3 @@ final databaseProvider = Provider<ContactDatabase>(
     return ContactDatabase();
   },
 );
-
-
-
-// final databaseManagerProvider = Provider<DatabaseManager>(
-//   (ref) {
-//     return DatabaseManager();
-//   },
-// );

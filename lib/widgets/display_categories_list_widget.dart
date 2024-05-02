@@ -22,10 +22,10 @@ class DisplayCategoriesListWidget extends ConsumerWidget {
             itemCount: categories.length,
             itemBuilder: (BuildContext context, int index) {
               final category = categories[index];
-              // final String? categoryId = contact.contactCategoryId;
-
               return InkWell(
-                onLongPress: () {},
+                onLongPress: () {
+                  AppAlerts.showDeleteCategoryAlertDialog(context, ref, category);
+                },
                 child: Padding(
                   padding: const EdgeInsets.all(6.0),
                   child: Container(
@@ -42,21 +42,11 @@ class DisplayCategoriesListWidget extends ConsumerWidget {
                           Padding(
                             padding: const EdgeInsets.only(left: 15.0),
                             child: DisplayWhiteTextWidget(
-                              text: '${category.categoryId} - ${category.categoryName}',
+                              text: category.categoryName,
                               fontWeight: FontWeight.bold,
                               fontSize: 20,
                             ),
                           ),
-                          // Padding(
-                          //   padding: const EdgeInsets.all(8.0),
-                          //   child: ElevatedButton(
-                          //     onPressed: () {
-                               
-                          //     },
-                          //     child: Icon(Icons.edit,
-                          //         color: context.colorScheme.inversePrimary),
-                          //   ),
-                          // ),
                         ],
                       ),
                     ),

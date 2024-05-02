@@ -39,4 +39,13 @@ class ContactRepositoryImpl implements ContactRepository {
       throw '$e';
     }
   }
+
+  @override
+  Future<List<Contact>> searchContacts(String keyboard) async {
+    try {
+      return await _datasource.searchContacts(keyboard);
+    } catch (e) {
+      throw '$e';
+    }
+  }
 }

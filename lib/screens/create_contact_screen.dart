@@ -5,12 +5,6 @@ import 'package:go_router/go_router.dart';
 import 'package:contacts_manager/widgets/widgets.dart';
 
 class CreateContactScreen extends StatelessWidget {
-  // static CreateContactScreen builder(
-  //   BuildContext context,
-  //   GoRouterState state,
-    
-  // ) => CreateContactScreen(contact: state.extra as Contact);
-
   static CreateContactScreen builder(
     BuildContext context,
     GoRouterState state,
@@ -24,7 +18,6 @@ class CreateContactScreen extends StatelessWidget {
   final Contact? contact; 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       appBar: AppBar(
         title: DisplayWhiteTextWidget(

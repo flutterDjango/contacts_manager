@@ -2,7 +2,7 @@ import 'package:contacts_manager/config/routes/routes_location.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'package:contacts_manager/screens/create_contact_screen.dart';
+// import 'package:contacts_manager/screens/create_contact_screen.dart';
 import 'package:contacts_manager/providers/providers.dart';
 import 'package:contacts_manager/utils/utils.dart';
 import 'package:contacts_manager/widgets/widgets.dart';

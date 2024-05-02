@@ -28,6 +28,15 @@ class ContactNotifier extends StateNotifier<ContactState> {
     }
   }
 
+  
+  Future<void> searchContacts(String keyword) async {
+    try {
+      await _repository.searchContacts(keyword);
+      getAllContacts();
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+  }
 
   Future<void> deleteContact(Contact contact) async {
     try {
@@ -47,24 +56,5 @@ class ContactNotifier extends StateNotifier<ContactState> {
     }
   }
 
-
-  // Future<void> deleteDatabase() async {
-  //   try {
-  //     await _repository.deleteDatabase();
-  //     // getAllContacts();
-  //   } catch (e) {
-  //     debugPrint(e.toString());
-  //   }
-  // }
-
-  
-  // Future<void> databaseExists() async {
-  //   try {
-  //     await _repository.databaseExists();
-  //     getAllContacts();
-  //   } catch (e) {
-  //     debugPrint(e.toString());
-  //   }
-  // }
 
 }

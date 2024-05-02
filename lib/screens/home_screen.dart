@@ -13,9 +13,6 @@ class HomeScreen extends StatelessWidget {
   
   @override
   Widget build(BuildContext context) {
-    // final contactState = ref.watch(contactProvider);
-    // final contacts = contactState.contacts;
-
     return Scaffold(
       appBar: AppBar(
         title: const DisplayWhiteTextWidget(
@@ -40,12 +37,8 @@ class HomeScreen extends StatelessWidget {
       ),
       body: const Column(
         children: [
-          
           HorizontalButtonBarWidget(),
-          
           DisplayContactsListWidget(),
-
-          // DisplayContactsListWidget(contacts: contactState.contacts)
         ],
       ),
     );

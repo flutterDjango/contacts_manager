@@ -15,6 +15,7 @@ class ContactFormWidget extends ConsumerStatefulWidget {
   const ContactFormWidget({super.key, this.contact});
 
   final Contact? contact;
+
   @override
   ConsumerState<ContactFormWidget> createState() => _ContactFormState();
 }
@@ -40,13 +41,8 @@ class _ContactFormState extends ConsumerState<ContactFormWidget> {
 
   // Category? _selectedCategory;
 
-  getCategorySelected(selectedCategory) {
-   
-    print('**$selectedCategory');
-    print('***${selectedCategory.categoryId}');
+  getCategorySelected(selectedCategory) { 
     contactItem['contactCategoryId'] = selectedCategory.categoryId;
-    print(contactItem);
-
   }
 
   void getCountryCode(String countryCode, String countryCodeKey) {
@@ -102,7 +98,7 @@ class _ContactFormState extends ConsumerState<ContactFormWidget> {
       _phoneNumber2Controller.text = widget.contact!.contactPhoneNumber2 ?? '';
       _emailController.text = widget.contact!.contactEmail ?? '';
       catId = widget.contact!.contactCategoryId;
-      
+      debugPrint('catId $catId');
     }
     super.initState();
   }
@@ -111,14 +107,17 @@ class _ContactFormState extends ConsumerState<ContactFormWidget> {
 
   String getCategoryName(categories, contact) {
     String cat = '';
+    debugPrint('contact $contact');
+    contact ?? debugPrint('null');
+    if (contact == null) {
+      return "Catégorie";
+    }
     for (var category in categories){
       if (category.categoryId == contact.contactCategoryId){
         cat = '${category.categoryName}';
         break;
-  
-      }
+      } else {cat = 'Catégorie inexistante';}
     }
-    // print('contactId ${contact.contactCategoryId}');
     return cat;
   }
   @override
@@ -196,8 +195,10 @@ class _ContactFormState extends ConsumerState<ContactFormWidget> {
                 child: CategoriesDropdownWidget(
                   categories: allCategories,
                   initialCategory: (catId == 0) ? 'Aucune'
-                                              : getCategoryName(allCategories,
-                                                                widget.contact),
+                                                : getCategoryName(allCategories,
+                                                                  widget.contact),
+                  // initialCategory: (catId == 0) ? 'Aucune'
+                  //                               : 'Pas aucune',
                   selectedCategory: (selectedCategory) =>
                       getCategorySelected(selectedCategory),
                 ),

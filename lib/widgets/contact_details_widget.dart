@@ -1,6 +1,7 @@
 import 'package:contacts_manager/providers/providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import 'package:contacts_manager/config/routes/routes_location.dart';
 import 'package:go_router/go_router.dart';
@@ -20,10 +21,8 @@ class ContactDetailsWidget extends ConsumerWidget {
       if (category.categoryId == contact.contactCategoryId){
         cat = '${category.categoryName}';
         break;
-  
-      }
+      } else {cat = 'Catégorie inexistante';}
     }
-    // print('contactId ${contact.contactCategoryId}');
     return cat;
   }
 
@@ -34,15 +33,7 @@ class ContactDetailsWidget extends ConsumerWidget {
     // String cat = 'Aucune';
     final Color colorIcon = Theme.of(context).colorScheme.primary;
     final Color colorDivider = Theme.of(context).colorScheme.primary;
-    // if (categories.isNotEmpty) {
-    //   print('cats ${categories}');
-    //   // print('cat id ${categories[0].categoryId}');
-    //   // print('cat name ${categories[0].categoryName}');
-     
-    // }
     
-    print('----------');
-    print(contact.contactCategoryId);
     String cat = (contact.contactCategoryId == 0)
                 ? 'Aucune'
                 : getCategoryName(categories, contact);
@@ -96,12 +87,23 @@ class ContactDetailsWidget extends ConsumerWidget {
                   width: 15,
                 ),
                 IconButton(
-                  onPressed: () {},
+                  onPressed: () async {
+                    final url = Uri(scheme: 'tel', path : contact.completePhoneNumber1);
+                    if (await canLaunchUrl(url)) {
+                        launchUrl(url);
+                      }
+                    // PhoneSmsEmail.openPhoneCall(phoneNumber: contact.completePhoneNumber1);
+                  },
                   icon: const Icon(Icons.phone),
                   color: colorIcon,
                 ),
                 IconButton(
-                    onPressed: () {},
+                    onPressed: () async {
+                      final url = Uri(scheme: 'sms', path : contact.completePhoneNumber1);
+                      if (await canLaunchUrl(url)) {
+                          launchUrl(url);
+                        }
+                      },
                     icon: const Icon(Icons.sms),
                     color: colorIcon),
               ],
@@ -118,12 +120,22 @@ class ContactDetailsWidget extends ConsumerWidget {
                   width: 15,
                 ),
                 IconButton(
-                  onPressed: () {},
+                  onPressed: () async {
+                    final url = Uri(scheme: 'tel', path : contact.completePhoneNumber2);
+                    if (await canLaunchUrl(url)) {
+                        launchUrl(url);
+                      }
+                  },
                   icon: const Icon(Icons.phone),
                   color: colorIcon,
                 ),
                 IconButton(
-                    onPressed: () {},
+                    onPressed: () async {
+                      final url = Uri(scheme: 'sms', path : contact.completePhoneNumber2);
+                      if (await canLaunchUrl(url)) {
+                          launchUrl(url);
+                        }
+                      },
                     icon: const Icon(Icons.sms),
                     color: colorIcon),
               ],
@@ -137,7 +149,14 @@ class ContactDetailsWidget extends ConsumerWidget {
                 Text('Email : ${contact.contactEmail}',
                     style: context.textTheme.bodyLarge),
                 IconButton(
-                    onPressed: () {},
+                    onPressed: () async {
+                      final url = Uri(scheme:'mailto',
+                                      path: contact.contactEmail,
+                                      );
+                      if (await canLaunchUrl(url)) {
+                          launchUrl(url);
+                        }
+                      },
                     icon: const Icon(Icons.email),
                     color: colorIcon),
               ],

@@ -19,5 +19,5 @@ final appRoutes = [
     path: RouteLocation.category,
     parentNavigatorKey: navigationKey,
     builder: CategoryScreen.builder,
-  )
+  ),
 ];

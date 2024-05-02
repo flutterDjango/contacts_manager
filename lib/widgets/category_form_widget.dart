@@ -87,7 +87,6 @@ class _CategoryFormWidgetState extends ConsumerState<CategoryFormWidget> {
     
       final category =
           Category(categoryName: categoryItem['categoryName'] ?? '');
-      // print("** $category");
       await ref
           .read(categoryProvider.notifier)
           .createCategory(category)

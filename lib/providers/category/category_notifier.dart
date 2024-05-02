@@ -18,6 +18,14 @@ class CategoryNotifier extends StateNotifier<CategoryState> {
     }
   }
 
+  Future<void> deleteCategory(Category category) async {
+    try {
+      await _repository.deleteCategory(category);
+      getAllCategories();
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+  }
   // Future<void> updateContact(Contact contact) async {
   //   try {
   //     await _repository.updateContact(contact);
@@ -27,23 +35,7 @@ class CategoryNotifier extends StateNotifier<CategoryState> {
   //   }
   // }
 
-  // Future<void> deleteContact(Contact contact) async {
-  //   try {
-  //     await _repository.deleteContact(contact);
-  //     getAllContacts();
-  //   } catch (e) {
-  //     debugPrint(e.toString());
-  //   }
-  // }
-
-  // Future<void> getCategoryById(int categoryId) async {
-  //   try {
-  //     final category = await _repository.getCategoryById(categoryId);
-  //     state = state.copyWith(categories: category);
-  //   } catch (e) {
-  //     debugPrint(e.toString());
-  //   }
-  // }
+  
 
   Future<void> getAllCategories() async {
     try {

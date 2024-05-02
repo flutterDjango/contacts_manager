@@ -57,6 +57,42 @@ class AppAlerts {
     );
   }
 
+  static Future<void> showDeleteCategoryAlertDialog(
+    BuildContext context,
+    WidgetRef ref,
+    Category category,
+  ) async {
+    Widget cancelButton = TextButton(
+      onPressed: () => context.pop(),
+      child: const Text('NON'),
+    );
+    Widget deleteButton = TextButton(
+      onPressed: () async {
+        await ref.read(categoryProvider.notifier).deleteCategory(category).then(
+          (value) {
+            AppAlerts.displaySnackBar(context, "La categorie est effacée.");
+            context.pop();
+          },
+        );
+      },
+      child: const Text('OUI'),
+    );
+    AlertDialog alert = AlertDialog(
+      title: const Text("Etes-vous sûr de vouloir supprimer cette categorie ?"),
+      actions: [
+        deleteButton,
+        cancelButton,
+      ],
+    );
+    await showDialog(
+      context: context,
+      builder: (ctx) {
+        return alert;
+      },
+    );
+  }
+
+
   static Future<void> showInformantionContactAlertDialog({
     BuildContext? context,
     String? message,

@@ -6,5 +6,6 @@ abstract class ContactRepository {
 
   Future<void> deleteContact(Contact contact);
   Future<List<Contact>> getAllContacts();
+  Future<List<Contact>> searchContacts(String keyword);
 
 }

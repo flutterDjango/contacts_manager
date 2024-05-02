@@ -89,16 +89,6 @@ class ContactDatabase {
     );
   }
 
-  // Future<List<Category>> getCategoryById(int categoryId) async {
-  //   final db = await dbInit;
-  //   final List<Map<String, dynamic>> data = await db.rawQuery(
-  //       'SELECT * FROM ${DbKeys.dbCategoryTable} WHERE categoryId =?',
-  //       [categoryId]);
-  //   return List.generate(
-  //     data.length,
-  //     (index) => Category.fromJson(data[index]),
-  //   );
-  // }
 
   Future<int> createCategory(Category category) async {
     final db = await dbInit;
@@ -108,6 +98,18 @@ class ContactDatabase {
           DbKeys.dbCategoryTable,
           category.toJson(),
           conflictAlgorithm: ConflictAlgorithm.replace,
+        );
+      },
+    );
+  }
+  Future<int> deleteCategory(Category category) async {
+    final db = await dbInit;
+    return db.transaction(
+      (txn) async {
+        return await txn.delete(
+          DbKeys.dbCategoryTable,
+          where: 'categoryId = ?',
+          whereArgs: [category.categoryId],
         );
       },
     );
