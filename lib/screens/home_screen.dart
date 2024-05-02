@@ -1,3 +1,4 @@
+import 'package:contacts_manager/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:contacts_manager/widgets/widgets.dart';
@@ -23,7 +24,8 @@ class HomeScreen extends StatelessWidget {
         actions: [
           IconButton(
             onPressed: () {
-            ContactDatabase().deleteDatabase();
+            AppAlerts.showDeleteDatabaseAlertDialog(context);
+            // ContactDatabase().deleteDatabase();
             },
             icon: Icon(
               Icons.settings,

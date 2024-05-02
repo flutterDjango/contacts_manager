@@ -1,3 +1,4 @@
+import 'package:contacts_manager/data/data.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -92,7 +93,36 @@ class AppAlerts {
     );
   }
 
-
+static Future<void> showDeleteDatabaseAlertDialog(
+    BuildContext context,
+  ) async {
+    Widget cancelButton = TextButton(
+      onPressed: () => context.pop(),
+      child: const Text('NON'),
+    );
+    Widget deleteButton = TextButton(
+      onPressed: () {
+        debugPrint('cancel');
+        ContactDatabase().deleteDatabase();
+        AppAlerts.displaySnackBar(context, "La base est effacée.");
+        context.pop();
+      },
+      child: const Text('OUI'),
+    );
+    AlertDialog alert = AlertDialog(
+      title: const Text("Etes-vous sûr de vouloir supprimer la base de donnée ?"),
+      actions: [
+        deleteButton,
+        cancelButton,
+      ],
+    );
+    await showDialog(
+      context: context,
+      builder: (ctx) {
+        return alert;
+      },
+    );
+  }
   static Future<void> showInformantionContactAlertDialog({
     BuildContext? context,
     String? message,
