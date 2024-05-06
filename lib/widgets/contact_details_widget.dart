@@ -84,7 +84,7 @@ class ContactDetailsWidget extends ConsumerWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    Text('Téléphone 1  : ${contact.completePhoneNumber1}',
+                    Text('Tél 1  : ${contact.completePhoneNumber1}',
                         style: context.textTheme.bodyLarge),
                     const SizedBox(
                       width: 15,
@@ -120,7 +120,7 @@ class ContactDetailsWidget extends ConsumerWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    Text('Téléphone 2 : ${contact.completePhoneNumber2}',
+                    Text('Tél 2 : ${contact.completePhoneNumber2}',
                         style: context.textTheme.bodyLarge),
                     const SizedBox(
                       width: 15,
