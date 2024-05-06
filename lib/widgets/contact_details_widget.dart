@@ -41,155 +41,163 @@ class ContactDetailsWidget extends ConsumerWidget {
 
     return Padding(
       padding: const EdgeInsets.all(30),
-      child: Column(
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Text(
-                (contact.contactLastName == "")
-                    ? ''
-                    : contact.contactLastName!,
-                style: context.textTheme.titleMedium?.copyWith(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 20,
-                ),
-              ),
-              const SizedBox(
-                width: 10,
-              ),
-              Text(
-                (contact.contactFirstName == "")
-                    ? ''
-                    : contact.contactFirstName!,
-                style: context.textTheme.titleMedium?.copyWith(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 20,
-                ),
-              ),
-            ],
-          ),
-          Divider(
-            thickness: 1.5,
-            color: colorDivider,
-          ),
-          const SizedBox(
-            height: 15,
-          ),
-          Visibility(
-            visible: contact.contactPhoneNumber1 != "",
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      child: SingleChildScrollView(
+        child: Column(
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                Text('Téléphone 1 : ${contact.completePhoneNumber1}',
-                    style: context.textTheme.bodyLarge),
+                Text(
+                  (contact.contactLastName == "")
+                      ? ''
+                      : contact.contactLastName!,
+                  style: context.textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 20,
+                  ),
+                ),
                 const SizedBox(
-                  width: 15,
+                  width: 10,
                 ),
-                IconButton(
-                  onPressed: () async {
-                    final url = Uri(scheme: 'tel', path : contact.completePhoneNumber1);
-                    if (await canLaunchUrl(url)) {
-                        launchUrl(url);
-                      }
-                    // PhoneSmsEmail.openPhoneCall(phoneNumber: contact.completePhoneNumber1);
-                  },
-                  icon: const Icon(Icons.phone),
-                  color: colorIcon,
+                Text(
+                  (contact.contactFirstName == "")
+                      ? ''
+                      : contact.contactFirstName!,
+                  style: context.textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 20,
+                  ),
                 ),
-                IconButton(
-                    onPressed: () async {
-                      final url = Uri(scheme: 'sms', path : contact.completePhoneNumber1);
-                      if (await canLaunchUrl(url)) {
-                          launchUrl(url);
-                        }
-                      },
-                    icon: const Icon(Icons.sms),
-                    color: colorIcon),
               ],
             ),
-          ),
-          Visibility(
-            visible: contact.contactPhoneNumber2 != "",
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            Divider(
+              thickness: 1.5,
+              color: colorDivider,
+            ),
+            const SizedBox(
+              height: 15,
+            ),
+            Visibility(
+              visible: contact.contactPhoneNumber1 != "",
+              child: SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Text('Téléphone 1  : ${contact.completePhoneNumber1}',
+                        style: context.textTheme.bodyLarge),
+                    const SizedBox(
+                      width: 15,
+                    ),
+                    IconButton(
+                      onPressed: () async {
+                        final url = Uri(scheme: 'tel', path : contact.completePhoneNumber1);
+                        if (await canLaunchUrl(url)) {
+                            launchUrl(url);
+                          }
+                        
+                      },
+                      icon: const Icon(Icons.phone),
+                      color: colorIcon,
+                    ),
+                    IconButton(
+                        onPressed: () async {
+                          final url = Uri(scheme: 'sms', path : contact.completePhoneNumber1);
+                          if (await canLaunchUrl(url)) {
+                              launchUrl(url);
+                            }
+                          },
+                        icon: const Icon(Icons.sms),
+                        color: colorIcon),
+                  ],
+                ),
+              ),
+            ),
+            Visibility(
+              visible: contact.contactPhoneNumber2 != "",
+              child: SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Text('Téléphone 2 : ${contact.completePhoneNumber2}',
+                        style: context.textTheme.bodyLarge),
+                    const SizedBox(
+                      width: 15,
+                    ),
+                    IconButton(
+                      onPressed: () async {
+                        final url = Uri(scheme: 'tel', path : contact.completePhoneNumber2);
+                        if (await canLaunchUrl(url)) {
+                            launchUrl(url);
+                          }
+                      },
+                      icon: const Icon(Icons.phone),
+                      color: colorIcon,
+                    ),
+                    IconButton(
+                        onPressed: () async {
+                          final url = Uri(scheme: 'sms', path : contact.completePhoneNumber2);
+                          if (await canLaunchUrl(url)) {
+                              launchUrl(url);
+                            }
+                          },
+                        icon: const Icon(Icons.sms),
+                        color: colorIcon),
+                  ],
+                ),
+              ),
+            ),
+            Visibility(
+              visible: contact.contactEmail != "",
+              child: SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Text('Email : ${contact.contactEmail}',
+                        style: context.textTheme.bodyLarge),
+                    IconButton(
+                        onPressed: () async {
+                          final url = Uri(scheme:'mailto',
+                                          path: contact.contactEmail,
+                                          );
+                          if (await canLaunchUrl(url)) {
+                              launchUrl(url);
+                            }
+                          },
+                        icon: const Icon(Icons.email),
+                        color: colorIcon),
+                  ],
+                ),
+              ),
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+           
+            Text('Catégorie : $cat'),
+            Divider(
+              thickness: 1.5,
+              color: colorDivider,
+            ),
+            const SizedBox(
+              height: 5,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                Text('Téléphone 2 : ${contact.completePhoneNumber2}',
-                    style: context.textTheme.bodyLarge),
-                const SizedBox(
-                  width: 15,
-                ),
-                IconButton(
-                  onPressed: () async {
-                    final url = Uri(scheme: 'tel', path : contact.completePhoneNumber2);
-                    if (await canLaunchUrl(url)) {
-                        launchUrl(url);
-                      }
-                  },
-                  icon: const Icon(Icons.phone),
-                  color: colorIcon,
-                ),
-                IconButton(
-                    onPressed: () async {
-                      final url = Uri(scheme: 'sms', path : contact.completePhoneNumber2);
-                      if (await canLaunchUrl(url)) {
-                          launchUrl(url);
-                        }
-                      },
-                    icon: const Icon(Icons.sms),
-                    color: colorIcon),
+                ElevatedButton(
+                    onPressed: () {
+                      context.push(RouteLocation.home);
+                    },
+                    child: const Text('Annuler')),
               ],
-            ),
-          ),
-          Visibility(
-            visible: contact.contactEmail != "",
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                Text('Email : ${contact.contactEmail}',
-                    style: context.textTheme.bodyLarge),
-                IconButton(
-                    onPressed: () async {
-                      final url = Uri(scheme:'mailto',
-                                      path: contact.contactEmail,
-                                      );
-                      if (await canLaunchUrl(url)) {
-                          launchUrl(url);
-                        }
-                      },
-                    icon: const Icon(Icons.email),
-                    color: colorIcon),
-              ],
-            ),
-          ),
-          const SizedBox(
-            height: 15,
-          ),
-         
-          Text('Catégorie : $cat'),
-          Divider(
-            thickness: 1.5,
-            color: colorDivider,
-          ),
-          const SizedBox(
-            height: 15,
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              ElevatedButton(
-                  onPressed: () {
-                    context.push(RouteLocation.home);
-                  },
-                  child: const Text('Annuler')),
-            ],
-          )
-        ],
+            )
+          ],
+        ),
       ),
     );
   }
 
-  // Future<String?> _getCategoryName(ref) async {
-  //   return await ref.read(categoryProvider);
-  // }
 }
